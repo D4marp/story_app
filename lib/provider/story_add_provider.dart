@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:story_app/data/api/api_service.dart';
 import 'package:story_app/data/enum/state.dart';
-import 'package:story_app/data/model/request_add_story.dart';
+import 'package:story_app/data/model/request_add_story_model.dart';
 
 class AddStoryProvider extends ChangeNotifier {
   final ApiService apiService;

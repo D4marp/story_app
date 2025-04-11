@@ -10,7 +10,7 @@ import 'package:story_app/routes/page_manager.dart';
 import 'package:story_app/util/helper.dart';
 import 'package:story_app/widget/card_list.dart';
 
-import '../data/model/detail.story.dart';
+import '../data/model/detail_story_model.dart';
 
 class ListStoryPage extends StatefulWidget {
   final VoidCallback onLogoutSuccess;

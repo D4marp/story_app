@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:story_app/data/model/base_response.dart';
-import 'package:story_app/data/model/detail.story.dart';
-import 'package:story_app/data/model/stories.dart';
-import 'package:story_app/data/model/login.dart';
-import 'package:story_app/data/model/request_add_story.dart';
-import 'package:story_app/data/model/request_login.dart';
-import 'package:story_app/data/model/request_register.dart';
+import 'package:story_app/data/model/base_response_model.dart';
+import 'package:story_app/data/model/detail_story_model.dart';
+import 'package:story_app/data/model/stories_model.dart';
+import 'package:story_app/data/model/login_model.dart';
+import 'package:story_app/data/model/request_add_story_model.dart';
+import 'package:story_app/data/model/request_login_model.dart';
+import 'package:story_app/data/model/request_register_model.dart';
 import 'package:story_app/data/preferences/token.dart';
 
 class ApiService {

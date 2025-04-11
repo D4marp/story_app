@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/api/api_service.dart';
 import 'package:story_app/data/enum/state.dart';
-import 'package:story_app/data/model/request_add_story.dart';
+import 'package:story_app/data/model/request_add_story_model.dart';
 import 'package:story_app/provider/story_add_provider.dart';
 import 'package:story_app/routes/page_manager.dart';
 import 'package:story_app/util/helper.dart';

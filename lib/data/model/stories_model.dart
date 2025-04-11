@@ -1,4 +1,4 @@
-import 'package:story_app/data/model/detail.story.dart';
+import 'package:story_app/data/model/detail_story_model.dart';
 
 
 

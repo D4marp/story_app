@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:story_app/data/api/api_service.dart';
 import 'package:story_app/data/enum/state.dart';
-import 'package:story_app/data/model/request_login.dart';
+import 'package:story_app/data/model/request_login_model.dart';
 import 'package:story_app/data/preferences/token.dart';
 
 class LoginProvider extends ChangeNotifier {

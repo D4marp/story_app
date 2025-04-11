@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:story_app/data/api/api_service.dart';
 import 'package:story_app/data/enum/state.dart';
-import 'package:story_app/data/model/request_register.dart';
+import 'package:story_app/data/model/request_register_model.dart';
 
 class RegisterProvider extends ChangeNotifier {
   final ApiService apiService;

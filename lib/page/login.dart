@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/api/api_service.dart';
 import 'package:story_app/data/enum/state.dart';
-import 'package:story_app/data/model/request_login.dart';
+import 'package:story_app/data/model/request_login_model.dart';
 
 import 'package:story_app/provider/login_provider.dart';
 import 'package:story_app/util/helper.dart';
