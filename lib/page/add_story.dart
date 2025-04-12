@@ -55,7 +55,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
                     height: 200,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -114,7 +114,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
                   decoration: InputDecoration(
                     labelText: "Description",
                     filled: true,
-                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     labelStyle: Theme.of(context).textTheme.bodyMedium,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
