@@ -1,16 +1,53 @@
-# story_app
+# 📖 Story App - Ceritakan Duniamu, Dimanapun Kamu Berada!
 
-A new Flutter project.
+Story App adalah aplikasi berbagi cerita berbasis Flutter yang memungkinkan pengguna membagikan kisah mereka lewat teks, gambar, dan lokasi geografis. Dengan pengalaman pengguna yang modern dan integrasi peta interaktif, Story App membuat setiap cerita terasa lebih hidup dan bermakna.
 
-## Getting Started
+## 🚀 Fitur Unggulan
 
-This project is a starting point for a Flutter application.
+### ✅ Fitur Dasar (Ditingkatkan dari Submission Sebelumnya)
+- Autentikasi (Login & Register)
+- Upload cerita dengan foto dan deskripsi
+- Menampilkan daftar cerita dalam bentuk feed
+- Halaman detail cerita yang informatif
 
-A few resources to get you started if this is your first Flutter project:
+### 🗺️ Lokasi dalam Cerita
+- Peta interaktif untuk setiap cerita yang memiliki koordinat
+- Pilih lokasi secara manual di peta saat membuat cerita
+- Klik marker untuk melihat alamat lokasi secara detail
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🔄 Infinite Scrolling
+- Cerita ditampilkan menggunakan **pagination dinamis** (infinite scroll)
+- Menghemat performa dan memaksimalkan user experience
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### ⚙️ Code Generation
+- Menggunakan `json_serializable` / `freezed` untuk auto-generasi model data
+- Kode lebih bersih, terstruktur, dan mudah dirawat
+
+## 📦 Teknologi yang Digunakan
+
+| Teknologi | Deskripsi |
+|----------|-----------|
+| Flutter | Framework utama aplikasi |
+| Dart | Bahasa pemrograman |
+| Google Maps SDK | Menampilkan dan memilih lokasi |
+| REST API | Backend komunikasi data |
+|  Provider | Manajemen state |
+| http | HTTP Client |
+| json_serializable / Freezed | Code generation model data |
+| Geocoding | Mendapatkan alamat dari koordinat |
+
+
+
+
+
+## ✨ Kontribusi
+
+Pull request terbuka untuk pengembangan Story App! Jangan ragu untuk mengajukan fitur atau perbaikan.
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+---
+
+Dengan Story App, setiap lokasi menyimpan cerita. Ceritakan duniamu, dan biarkan orang lain menemukan jejakmu. 🌍✨
