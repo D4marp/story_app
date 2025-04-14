@@ -35,7 +35,7 @@
             android:value="2" />
          <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAaxhdZ2GooovVpDjLVBICo6hpaCcjo-5M" />
+            android:value="OPEN-KEY-MAP" />
 
     </application>
     <!-- Required to query activities that can process text, see:
