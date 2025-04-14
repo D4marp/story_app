@@ -1,111 +1,204 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
-import 'package:story_app/data/model/base_response_model.dart';
-import 'package:story_app/data/model/detail_story_model.dart';
-import 'package:story_app/data/model/stories_model.dart';
-import 'package:story_app/data/model/login_model.dart';
-import 'package:story_app/data/model/request_add_story_model.dart';
-import 'package:story_app/data/model/request_login_model.dart';
-import 'package:story_app/data/model/request_register_model.dart';
+import 'package:story_app/data/model/requests/login_request_model.dart';
+import 'package:story_app/data/model/requests/register_request_model.dart';
+import 'package:story_app/data/model/response/auth/auth_response.dart';
+import 'package:story_app/data/model/response/detail/stories_detail_response.dart';
 import 'package:story_app/data/preferences/token.dart';
 
+import '../../core/constants/variables.dart';
+import '../model/response/default/default_response.dart';
+import '../model/response/stories/stories_response.dart';
+
 class ApiService {
-  static const String _baseUrl = "https://story-api.dicoding.dev/v1";
-  static const Duration timeout = Duration(seconds: 5);
-  static final Uri _loginEndpoint = Uri.parse("$_baseUrl/login");
-  static final Uri _registerEndpoint = Uri.parse("$_baseUrl/register");
-  static final Uri _storiesEndpoint = Uri.parse("$_baseUrl/stories");
+  Future<Either<String, AuthResponse>> login(
+      LoginRequestModel loginRequestModel) async {
+    try {
+      final url = Uri.parse('${Variables.baseUrl}/login');
+      final header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
 
-  Uri _detailStoryEndpoint(String id) => Uri.parse("$_baseUrl/stories/$id");
+      final body = jsonEncode(loginRequestModel.toJson());
 
-  Future<Login> login(LoginRequest request) async {
-    final response = await http
-        .post(_loginEndpoint, body: request.toJson())
-        .timeout(timeout);
-    var login = Login.fromJson(json.decode(response.body));
+      final response = await http.post(
+        url,
+        headers: header,
+        body: body,
+      );
 
-    if (_isResponseSuccess(response.statusCode)) {
-      return login;
-    } else {
-      throw Exception("${response.statusCode} - ${login.message}");
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        final authResponse = AuthResponse.fromJson(responseBody);
+        return Right(authResponse);
+      } else {
+        final errorJson = jsonDecode(response.body) as Map<String, dynamic>;
+        final errorMessage = errorJson['message'] ?? 'Unknown error occurred';
+        return Left(errorMessage);
+      }
+    } catch (e) {
+      return Left('Exception: $e');
     }
   }
 
-  Future<BaseResponse> register(RegisterRequest request) async {
-    final response = await http
-        .post(_registerEndpoint, body: request.toJson())
-        .timeout(timeout);
+  Future<Either<String, DefaultResponse>> register(
+      RegisterRequestModel registerRequestModel) async {
+    try {
+      final url = Uri.parse('${Variables.baseUrl}/register');
+      final header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
 
-    var baseResponse = BaseResponse.fromJson(json.decode(response.body));
+      final body = jsonEncode(registerRequestModel.toJson());
 
-    if (_isResponseSuccess(response.statusCode)) {
-      return baseResponse;
-    } else {
-      throw Exception("${response.statusCode} - ${baseResponse.message}");
+      final response = await http.post(
+        url,
+        headers: header,
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        final responseBody = jsonDecode(response.body);
+        final defaultResponse = DefaultResponse.fromJson(responseBody);
+        return Right(defaultResponse);
+      } else {
+        final errorJson = jsonDecode(response.body) as Map<String, dynamic>;
+        final errorMessage = errorJson['message'] ?? 'Unknown error occurred';
+        return Left(errorMessage);
+      }
+    } catch (e) {
+      return Left('Exception: $e');
     }
   }
 
-  Future<Stories> getStories() async {
-    var tokenPref = Token();
-    var token = await tokenPref.getToken();
+  Future<Either<String, StoryResponse>> getStories({
+    int? page,
+    int? size,
+    int? location,
+  }) async {
+    try {
+      final authData = await TokenPreference().getAuthData();
 
-    final response = await http.get(_storiesEndpoint, headers: {
-      'Authorization': 'Bearer $token',
-    }).timeout(timeout);
+      final queryParameters = {
+        if (page != null) 'page': page.toString(),
+        if (size != null) 'size': size.toString(),
+        if (location != null) 'location': location.toString(),
+      };
 
-    var stories = Stories.fromJson(json.decode(response.body));
-    if (_isResponseSuccess(response.statusCode)) {
-      return stories;
-    } else {
-      throw Exception("${response.statusCode} - ${stories.message}");
+      final url = Uri.parse('${Variables.baseUrl}/stories')
+          .replace(queryParameters: queryParameters);
+
+      final header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${authData?.loginResults.token}',
+      };
+
+      final response = await http.get(
+        url,
+        headers: header,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        final storyResponse = StoryResponse.fromJson(responseBody);
+        return Right(storyResponse);
+      } else {
+        final errorJson = jsonDecode(response.body) as Map<String, dynamic>;
+        final errorMessage = errorJson['message'] ?? 'Unknown error occurred';
+        return Left(errorMessage is String ? errorMessage : 'Unknown error');
+      }
+    } catch (e) {
+      return Left('Exception: $e');
     }
   }
 
-  Future<DetailStory> getDetailStory(String id) async {
-    var tokenPref = Token();
-    var token = await tokenPref.getToken();
+  Future<Either<String, StoryDetailResponse>> getStoryDetail(String id) async {
+    try {
+      final authData = await TokenPreference().getAuthData();
 
-    final response = await http.get(_detailStoryEndpoint(id), headers: {
-      'Authorization': 'Bearer $token',
-    }).timeout(timeout);
+      final url = Uri.parse('${Variables.baseUrl}/stories/$id');
 
-    var detailStory = DetailStory.fromJson(json.decode(response.body));
+      final header = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${authData?.loginResults.token}',
+      };
 
-    if (_isResponseSuccess(response.statusCode)) {
-      return detailStory;
-    } else {
-      throw Exception("${response.statusCode} - ${detailStory.message}");
+      final response = await http.get(
+        url,
+        headers: header,
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        final storyDetailResponse = StoryDetailResponse.fromJson(responseBody);
+        return Right(storyDetailResponse);
+      } else {
+        final errorJson = jsonDecode(response.body) as Map<String, dynamic>;
+        final errorMessage = errorJson['message'] ?? 'Unknown error occurred';
+        return Left(errorMessage is String ? errorMessage : 'Unknown error');
+      }
+    } catch (e) {
+      return Left('Exception: $e');
     }
   }
 
-  Future<BaseResponse> addStory(AddStoryRequest story) async {
-    var tokenPref = Token();
-    var token = await tokenPref.getToken();
+  Future<Either<String, DefaultResponse>> addNewStory(
+    List<int> bytes,
+    String fileName,
+    String description,
+    double? lat,
+    double? lon,
+  ) async {
+    try {
+      final url = Uri.parse('${Variables.baseUrl}/stories');
+      final authData = await TokenPreference().getAuthData();
 
-    final request = http.MultipartRequest('POST', _storiesEndpoint);
-    request.headers['Authorization'] = 'Bearer $token';
-    request.fields['description'] = story.description;
-    request.files.add(http.MultipartFile(
-      'photo',
-      story.photo.readAsBytes().asStream(),
-      story.photo.lengthSync(),
-      filename: story.photo.path.split('/').last,
-    ));
-    if (story.lat != null) {
-      request.fields['lat'] = story.lat.toString();
-      request.fields['lon'] = story.lon.toString();
-    }
+      var request = http.MultipartRequest('POST', url);
 
-    final response = await request.send().timeout(timeout);
+      final multiPartFile = http.MultipartFile.fromBytes(
+        "photo",
+        bytes,
+        filename: fileName,
+      );
 
-    if (_isResponseSuccess(response.statusCode)) {
-      String responseBody = await response.stream.bytesToString();
-      return BaseResponse.fromJson(json.decode(responseBody));
-    } else {
-      throw Exception("${response.statusCode} - Error when upload story");
+      final Map<String, String> fields = {
+        "description": description,
+        if (lat != null) "lat": lat.toString(),
+        if (lon != null) "lon": lon.toString(),
+      };
+
+      final Map<String, String> headers = {
+        "Authorization": "Bearer ${authData?.loginResults.token}",
+      };
+
+      request.files.add(multiPartFile);
+      request.fields.addAll(fields);
+      request.headers.addAll(headers);
+
+      final http.StreamedResponse streamedResponse = await request.send();
+      final int statusCode = streamedResponse.statusCode;
+
+      final Uint8List responseList = await streamedResponse.stream.toBytes();
+      final String responseData = String.fromCharCodes(responseList);
+
+      if (statusCode == 201) {
+        final responseBody = jsonDecode(responseData);
+        final defaultResponse = DefaultResponse.fromJson(responseBody);
+        return Right(defaultResponse);
+      } else {
+        final errorJson = jsonDecode(responseData) as Map<String, dynamic>;
+        final errorMessage = errorJson['message'] ?? 'Unknown error occurred';
+        return Left(errorMessage);
+      }
+    } catch (e) {
+      return Left('Exception: $e');
     }
   }
-
-  _isResponseSuccess(int statusCode) => (statusCode >= 200 && statusCode < 300);
 }

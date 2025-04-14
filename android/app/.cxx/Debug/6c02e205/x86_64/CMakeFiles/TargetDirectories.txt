@@ -1,0 +1,2 @@
+/Users/HCMPublic/Documents/Damar/story_app/android/app/.cxx/Debug/6c02e205/x86_64/CMakeFiles/edit_cache.dir
+/Users/HCMPublic/Documents/Damar/story_app/android/app/.cxx/Debug/6c02e205/x86_64/CMakeFiles/rebuild_cache.dir
